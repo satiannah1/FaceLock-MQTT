@@ -6,42 +6,85 @@
 
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #1f2937, #111827);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             text-align: center;
             padding-top: 80px;
+            margin: 0;
+            min-height: 100vh;
         }
 
         .card {
-            background: #1e293b;
-            width: 400px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            width: 450px;
             margin: auto;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         h1 {
             margin-bottom: 30px;
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .status {
-            font-size: 22px;
-            margin: 15px 0;
+            font-size: 18px;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .status:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
         }
 
         .label {
-            color: #9ca3af;
+            color: #4a5568;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9em;
         }
 
         .value {
             font-weight: bold;
-            color: #22c55e;
+            color: #1a202c;
+            font-size: 1.1em;
+            margin-left: 10px;
         }
 
         .disconnected {
+            color: #e53e3e;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .connected {
+            color: #10b981;
+            font-weight: bold;
+        }
+
+        .error {
             color: #ef4444;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -49,7 +92,7 @@
 <body>
 
     <div class="card">
-        <h1>🎯 Face Tracking Dashboard</h1>
+        <h1>🔐 Smart Face Lock Dashboard</h1>
 
         <div class="status">
             <span class="label">Status:</span>
@@ -83,6 +126,7 @@
         ws.onopen = function () {
             connectionEl.innerText = "Connected";
             connectionEl.classList.remove("disconnected");
+            connectionEl.classList.add("connected");
         };
 
         ws.onmessage = function (event) {
@@ -91,15 +135,27 @@
             statusEl.innerText = data.status;
             confidenceEl.innerText = data.confidence;
             timestampEl.innerText = data.timestamp;
+            
+            // Add visual feedback based on status
+            if (data.status === "FACE_DETECTED" || data.status === "MOVE_LEFT" || data.status === "MOVE_RIGHT") {
+                statusEl.style.color = "#10b981";
+            } else if (data.status === "NO_FACE") {
+                statusEl.style.color = "#f59e0b";
+            } else {
+                statusEl.style.color = "#1a202c";
+            }
         };
 
         ws.onerror = function () {
             connectionEl.innerText = "Error";
+            connectionEl.classList.remove("connected");
             connectionEl.classList.add("disconnected");
+            connectionEl.classList.add("error");
         };
 
         ws.onclose = function () {
             connectionEl.innerText = "Disconnected";
+            connectionEl.classList.remove("connected");
             connectionEl.classList.add("disconnected");
         };
     </script>

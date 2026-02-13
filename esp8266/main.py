@@ -5,13 +5,13 @@ from machine import Pin, PWM
 import json
 
 # WIFI
-SSID = "Wireless1"
-PASSWORD = "@RcaNyabihu2023"
+SSID = "RCA OUTDOOR"
+PASSWORD = "RCA@2025"
 
 # MQTT
-TEAM_ID = "team05"
+TEAM_ID = "team02"
 BROKER = "10.12.73.101"
-TOPIC = b"vision/team05/movement"
+TOPIC = b"vision/team02/movement"
 
 # Connect WiFi
 sta = network.WLAN(network.STA_IF)

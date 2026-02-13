@@ -3,7 +3,7 @@ import websockets
 import paho.mqtt.client as mqtt
 import json
 
-TEAM_ID = "team05"
+TEAM_ID = "team02"
 MQTT_TOPIC = f"vision/{TEAM_ID}/movement"
 MQTT_BROKER = "localhost"
 
