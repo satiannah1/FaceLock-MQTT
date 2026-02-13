@@ -5,7 +5,7 @@ import time
 
 # ========== CONFIG ==========
 TEAM_ID = "team05"
-BROKER_IP = "10.12.73.101"
+BROKER_IP = "127.0.0.1"
 BROKER_PORT = 1883
 
 TOPIC = f"vision/{TEAM_ID}/movement"
