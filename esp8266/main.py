@@ -10,7 +10,7 @@ PASSWORD = "RCA@2025"
 
 # MQTT
 TEAM_ID = "team02"
-BROKER = "10.12.73.101"
+BROKER = "127.0.0.1"
 TOPIC = b"vision/team02/movement"
 
 # Connect WiFi
