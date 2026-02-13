@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Vision Dashboard</title>
+</head>
+<body>
+    <h1>Face Tracking Status</h1>
+    <h2 id="status">Waiting...</h2>
+    <h3 id="confidence"></h3>
+    <h4 id="timestamp"></h4>
+
+    <script>
+const ws = new WebSocket("ws://localhost:9002");
+
+        ws.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+
+            document.getElementById("status").innerText =
+                "Status: " + data.status;
+
+            document.getElementById("confidence").innerText =
+                "Confidence: " + data.confidence;
+
+            document.getElementById("timestamp").innerText =
+                "Timestamp: " + data.timestamp;
+        };
+    </script>
+</body>
+</html>
