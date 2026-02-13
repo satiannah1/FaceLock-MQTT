@@ -1,29 +1,108 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Vision Dashboard</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1f2937, #111827);
+            color: white;
+            text-align: center;
+            padding-top: 80px;
+        }
+
+        .card {
+            background: #1e293b;
+            width: 400px;
+            margin: auto;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+        }
+
+        h1 {
+            margin-bottom: 30px;
+        }
+
+        .status {
+            font-size: 22px;
+            margin: 15px 0;
+        }
+
+        .label {
+            color: #9ca3af;
+        }
+
+        .value {
+            font-weight: bold;
+            color: #22c55e;
+        }
+
+        .disconnected {
+            color: #ef4444;
+        }
+    </style>
 </head>
+
 <body>
-    <h1>Face Tracking Status</h1>
-    <h2 id="status">Waiting...</h2>
-    <h3 id="confidence"></h3>
-    <h4 id="timestamp"></h4>
+
+    <div class="card">
+        <h1>🎯 Face Tracking Dashboard</h1>
+
+        <div class="status">
+            <span class="label">Status:</span>
+            <span id="status" class="value">Waiting...</span>
+        </div>
+
+        <div class="status">
+            <span class="label">Confidence:</span>
+            <span id="confidence" class="value">-</span>
+        </div>
+
+        <div class="status">
+            <span class="label">Timestamp:</span>
+            <span id="timestamp" class="value">-</span>
+        </div>
+
+        <div class="status">
+            <span class="label">Connection:</span>
+            <span id="connection" class="value disconnected">Disconnected</span>
+        </div>
+    </div>
 
     <script>
-const ws = new WebSocket("ws://localhost:9002");
+        const ws = new WebSocket("ws://localhost:9002");
 
-        ws.onmessage = function(event) {
+        const statusEl = document.getElementById("status");
+        const confidenceEl = document.getElementById("confidence");
+        const timestampEl = document.getElementById("timestamp");
+        const connectionEl = document.getElementById("connection");
+
+        ws.onopen = function () {
+            connectionEl.innerText = "Connected";
+            connectionEl.classList.remove("disconnected");
+        };
+
+        ws.onmessage = function (event) {
             const data = JSON.parse(event.data);
 
-            document.getElementById("status").innerText =
-                "Status: " + data.status;
+            statusEl.innerText = data.status;
+            confidenceEl.innerText = data.confidence;
+            timestampEl.innerText = data.timestamp;
+        };
 
-            document.getElementById("confidence").innerText =
-                "Confidence: " + data.confidence;
+        ws.onerror = function () {
+            connectionEl.innerText = "Error";
+            connectionEl.classList.add("disconnected");
+        };
 
-            document.getElementById("timestamp").innerText =
-                "Timestamp: " + data.timestamp;
+        ws.onclose = function () {
+            connectionEl.innerText = "Disconnected";
+            connectionEl.classList.add("disconnected");
         };
     </script>
+
 </body>
 </html>
